@@ -10,7 +10,7 @@ public class PLayerCombat : MonoBehaviour
     [SerializeField] private float _attackRange;
     [SerializeField] private LayerMask _enemylayer;
     [SerializeField] private float _timeBetwenAttacks;
-    [SerializeField] private float _knockForce;
+    
     
 
     public Animator Animatior;
@@ -41,8 +41,9 @@ public class PLayerCombat : MonoBehaviour
 
         for (int i = 0; i < _hitEnemys.Length; i++)
         {
-            Debug.Log("Мы в цикле");
-            _hitEnemys[i].GetComponent<Enemy>().GetDamage(PlayerDamage);
+            
+            _hitEnemys[i].GetComponent<Enemy>().GetDamage(PlayerDamage); 
+            _hitEnemys[i].GetComponent<Enemy>().KnockingBack(gameObject.transform);
         }
     }
 
