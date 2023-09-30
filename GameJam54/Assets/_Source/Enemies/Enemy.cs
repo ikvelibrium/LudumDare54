@@ -9,50 +9,40 @@ public class Enemy : MonoBehaviour
 {
     public float MaxHp;
     public float Damage;
-    public AIPath AiPath;
-    
 
     [SerializeField] private float _knockForce;
     [SerializeField] private Transform _attackPoint;
     [SerializeField] private float _attackRange;
     [SerializeField] private LayerMask _playerlayer;
     [SerializeField] private float _timeBetwenAttacks;
-
-    [SerializeField] private Transform[] _patrolpoints;
-    [SerializeField] private Transform _target;
-    [SerializeField] private float _nextWayPointDistance;
     [SerializeField] private float _sightOfViewDistance;
     [SerializeField] private Transform _raycastStart;
     [SerializeField] private float _speed;
-    [SerializeField] private AIDestinationSetter _setter;
-    private Path _path;
-    private Seeker _seeker;
-    private int _currentWaypoint;
-    private bool _reachedEndOfPath = true;
     
-
+    private bool _playerFound = false;
     private float _actualTimeBetwenAttacks;
     private float _currentHp;
-    private Rigidbody2D rb; 
-    
+    private Transform _target;
+    private Rigidbody2D rb;
+    [SerializeField] private Transform[] _patrolpoints;
 
     private void Start()
     {
-        _seeker = gameObject.GetComponent<Seeker>();
+        
         rb = gameObject.GetComponent<Rigidbody2D>();
         _currentHp = MaxHp;
         _actualTimeBetwenAttacks = _timeBetwenAttacks;
-
+        
     }
     
     private void Update()
     {
-        if (_reachedEndOfPath == true)
+        if (_playerFound == false)
         {
             DetectPlayer();
         } else
         {
-            Moove();
+            FollowPlayer(_target);
         }
        
        
@@ -68,7 +58,8 @@ public class Enemy : MonoBehaviour
             Debug.DrawLine(_raycastStart.position, hitInfo.point, Color.red);
             if (LayerChecker.CheckLayersEquality(hitInfo.collider.gameObject.layer, _playerlayer))
             {
-                GeneratePath(hitInfo.collider.gameObject.transform);
+                _target = hitInfo.collider.transform;
+                _playerFound = true;
             }
         }
         else
@@ -77,51 +68,37 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void GeneratePath(Transform target)
+    private void FollowPlayer(Transform target)
     {
-        _seeker.StartPath(rb.position, target.position, OnPathComplete);
-        
-      
-        _reachedEndOfPath = false;
+        if (Vector2.Distance(transform.position,target.position ) >= _attackRange)
+        {
+            //Debug.Log(Vector2.Distance(transform.position, target.position));
+            transform.position = Vector2.MoveTowards(transform.position, target.position, _speed * Time.deltaTime);
+        }
+        else
+        {
+            if (_actualTimeBetwenAttacks <= 0)
+            {
+                Attack();
+                
+            }
             
-           
+        }
+        
     }
+    
 
-    private void OnPathComplete(Path p)
+    public void Attack()
     {
-       if(!p.error)
+        Collider2D[] _hitEnemys = Physics2D.OverlapCircleAll(_attackPoint.position, _attackRange, _playerlayer);
+
+        for (int i = 0; i < _hitEnemys.Length; i++)
         {
-            _path = p;
-            _currentWaypoint = 0;
+
+            _hitEnemys[i].GetComponent<PLayerCombat>().GetDamage(Damage);
+            _hitEnemys[i].GetComponent<PLayerCombat>().KnockingBack(gameObject.transform);
         }
-    }
-
-    private void Moove()
-    {
-        
-        if (_path == null)
-            return;
-        
-        if (_currentWaypoint >= _path.vectorPath.Count)
-        {
-            
-            _reachedEndOfPath = true;
-            return;
-        }
-        
-        Vector2 direction = ((Vector2)_path.vectorPath[_currentWaypoint] - rb.position).normalized;
-
-        Vector2 force = direction * _speed * Time.deltaTime;
-
-        rb.AddForce(force);
-
-        float distance = Vector2.Distance(rb.position, _path.vectorPath[_currentWaypoint]);
-
-        if (distance < _nextWayPointDistance)
-        {
-            _currentWaypoint++; 
-        }
-        
+        _actualTimeBetwenAttacks = _timeBetwenAttacks;
     }
     public void GetDamage(float dmg)
     {
@@ -142,8 +119,6 @@ public class Enemy : MonoBehaviour
     }
     private void Die()
     {
-
-        Debug.Log($"Enemy dead");
         Destroy(gameObject);
     }
 }

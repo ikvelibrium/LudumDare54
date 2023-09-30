@@ -5,19 +5,23 @@ using UnityEngine;
 
 public class PLayerCombat : MonoBehaviour
 {
-    [SerializeField] private float PlayerDamage;
+    [SerializeField] private float _maxHp;
+    [SerializeField] private float _playerDamage;
     [SerializeField] private Transform _attackPoint;
     [SerializeField] private float _attackRange;
     [SerializeField] private LayerMask _enemylayer;
     [SerializeField] private float _timeBetwenAttacks;
-    
-    
+    [SerializeField] private float _knockForce;
 
+
+    private Rigidbody2D rb;
     public Animator Animatior;
-
+    private float _currentHp;
     private  float _actualTimeBetwenAttack;
     private void Start()
     {
+        _currentHp = _maxHp;
+        rb = gameObject.GetComponent<Rigidbody2D>();
         _actualTimeBetwenAttack = _timeBetwenAttacks;
     }
     void Update()
@@ -42,7 +46,7 @@ public class PLayerCombat : MonoBehaviour
         for (int i = 0; i < _hitEnemys.Length; i++)
         {
             
-            _hitEnemys[i].GetComponent<Enemy>().GetDamage(PlayerDamage); 
+            _hitEnemys[i].GetComponent<Enemy>().GetDamage(_playerDamage); 
             _hitEnemys[i].GetComponent<Enemy>().KnockingBack(gameObject.transform);
         }
     }
@@ -53,5 +57,26 @@ public class PLayerCombat : MonoBehaviour
              return;
         
         Gizmos.DrawWireSphere(_attackPoint.position, _attackRange);
+    }
+    public void KnockingBack(Transform enemy)
+    {
+        Vector2 direction = (transform.position - enemy.position).normalized;
+        rb.AddForce(direction * _knockForce);
+        rb.AddForce(Vector2.up * _knockForce);
+    }
+    public void GetDamage(float dmg)
+    {
+        if (_currentHp <= 0)
+        {
+            Die();
+        }
+
+        _currentHp -= dmg;
+        Debug.Log($"Player hp = {_currentHp}");
+    }
+
+    private void Die()
+    {
+
     }
 }
