@@ -17,6 +17,7 @@ public class PLayerController : MonoBehaviour
     [SerializeField] private ParticleSystem _particleSystem;
     [SerializeField] private float _speedInSmokeMode;
     [SerializeField] private float _smokeManacostPerSecond;
+    [SerializeField] private float _hpRegen;
 
     private float _actualSpeed;
     private float _actualMana;
@@ -47,7 +48,7 @@ public class PLayerController : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
         }
 
-        if (Input.GetKeyDown(_abilityKey) && _actualMana >= _smokeManacostPerSecond && _isAbilityActive == false)
+        if (Input.GetKeyDown(_abilityKey) && _actualMana >= _mana && _isAbilityActive == false)
         {
             TurnIntoSmoke();
         } else if (Input.GetKeyDown(_abilityKey) && _isAbilityActive == true)
@@ -66,13 +67,22 @@ public class PLayerController : MonoBehaviour
             }
             _actualMana -= Time.deltaTime;
         }
-        if (_isAbilityActive == false && _actualMana <= _mana)
-        {
-            _actualMana += Time.deltaTime;
-        }
+        
         Flip();
     }
 
+    public void ManaRegen(float mana)
+    {
+        if (_isAbilityActive == false && _actualMana <= _mana)
+        {
+            _actualMana += mana;
+            if (_actualMana > _mana)
+            {
+                _actualMana = _mana;
+            }
+        } 
+    
+    }
     private void FixedUpdate()
     {
         rb.velocity = new Vector2(_horizontalInput * _actualSpeed, rb.velocity.y);
@@ -95,6 +105,7 @@ public class PLayerController : MonoBehaviour
     } 
     private void TurnIntoSmoke()
     {
+        _playerCombat.Heal(_hpRegen);
         _isAbilityActive = true;
         _playerBody.SetActive(false);
         _actualSpeed = _speedInSmokeMode;

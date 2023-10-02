@@ -16,6 +16,7 @@ public class EnemyShooter : MonoBehaviour
     [SerializeField] private float _stopTrackingDistance;
     [SerializeField] private GameObject _projectile;
 
+    
     private bool _playerFound = false;
     private float _actualTimeBetwenAttacks;
     private Transform _target;
@@ -49,7 +50,7 @@ public class EnemyShooter : MonoBehaviour
         
     }
     
-
+   
     private void DetectPlayer()
     {
         RaycastHit2D hitInfo = Physics2D.Raycast(_raycastStart.position, _raycastStart.right, _sightOfViewDistance);

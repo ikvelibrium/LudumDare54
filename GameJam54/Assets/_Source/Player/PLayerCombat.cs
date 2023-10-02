@@ -12,8 +12,9 @@ public class PLayerCombat : MonoBehaviour
     [SerializeField] private LayerMask _enemylayer;
     [SerializeField] private float _timeBetwenAttacks;
     [SerializeField] private float _knockForce;
+    [SerializeField] private float _manaRegen;
 
-
+    private PLayerController _pLayerController;
     private Rigidbody2D rb;
     public Animator Animatior;
     private float _currentHp;
@@ -23,6 +24,7 @@ public class PLayerCombat : MonoBehaviour
     {
         _currentHp = _maxHp;
         rb = gameObject.GetComponent<Rigidbody2D>();
+        _pLayerController = gameObject.GetComponent<PLayerController>();
         _actualTimeBetwenAttack = _timeBetwenAttacks;
     }
     void Update()
@@ -43,12 +45,13 @@ public class PLayerCombat : MonoBehaviour
     {
 
         Collider2D[] _hitEnemys = Physics2D.OverlapCircleAll(_attackPoint.position,_attackRange,_enemylayer);
-
+        
         for (int i = 0; i < _hitEnemys.Length; i++)
         {
             
             _hitEnemys[i].GetComponent<HealthSyst>().GetDamage(_playerDamage); 
             _hitEnemys[i].GetComponent<HealthSyst>().KnockingBack(gameObject.transform);
+            _pLayerController.ManaRegen(_manaRegen);
         }
     }
 
@@ -71,6 +74,10 @@ public class PLayerCombat : MonoBehaviour
     public void ChangeAbolotyBool( bool ability)
     {
         _isAbilityActive = ability;
+    }
+    public void Heal(float healAmount)
+    {
+        _currentHp += healAmount;
     }
     public void GetDamage(float dmg)
     {

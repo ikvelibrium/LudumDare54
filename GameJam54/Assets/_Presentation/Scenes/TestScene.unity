@@ -1151,5 +1151,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: PLayer
       objectReference: {fileID: 0}
+    - target: {fileID: 5796433837944963063, guid: 251734564cd27de48bbeb3fe0bf3526c, type: 3}
+      propertyPath: _manaRegen
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 251734564cd27de48bbeb3fe0bf3526c, type: 3}
