@@ -8,13 +8,31 @@ public class PLayerController : MonoBehaviour
     public float JumpForce;
 
 
-    private float _horizontalInput;
-    private bool _facingRight = true;
-
+    [SerializeField] private float _mana;
+    [SerializeField] private KeyCode _abilityKey;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private GameObject _playerBody;
+    [SerializeField] private ParticleSystem _particleSystem;
+    [SerializeField] private float _speedInSmokeMode;
+    [SerializeField] private float _smokeManacostPerSecond;
 
+    private float _actualSpeed;
+    private float _actualMana;
+    private bool _isAbilityActive = false;
+    private float _horizontalInput;
+    private bool _facingRight = true;
+
+    PLayerCombat _playerCombat;
+
+    private void Start()
+    {
+        _particleSystem.Stop();
+        _actualSpeed = Speed;
+        _actualMana = _mana;
+        _playerCombat = gameObject.GetComponent<PLayerCombat>();
+    }
     void Update()
     {
         _horizontalInput = Input.GetAxisRaw("Horizontal");
@@ -29,12 +47,35 @@ public class PLayerController : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
         }
 
+        if (Input.GetKeyDown(_abilityKey) && _actualMana >= _smokeManacostPerSecond && _isAbilityActive == false)
+        {
+            TurnIntoSmoke();
+        } else if (Input.GetKeyDown(_abilityKey) && _isAbilityActive == true)
+        {
+            TurnOutOfSmoke();
+        }
+        if (_isAbilityActive == true)
+        {
+            if (_actualMana <= _smokeManacostPerSecond)
+            {
+                TurnOutOfSmoke();
+            }
+            if (Input.GetButtonDown("Jump"))
+            {
+                rb.velocity = new Vector2(rb.velocity.x, JumpForce); 
+            }
+            _actualMana -= Time.deltaTime;
+        }
+        if (_isAbilityActive == false && _actualMana <= _mana)
+        {
+            _actualMana += Time.deltaTime;
+        }
         Flip();
     }
 
     private void FixedUpdate()
     {
-        rb.velocity = new Vector2(_horizontalInput * Speed, rb.velocity.y);
+        rb.velocity = new Vector2(_horizontalInput * _actualSpeed, rb.velocity.y);
     }
 
     private bool IsGrounded()
@@ -51,5 +92,21 @@ public class PLayerController : MonoBehaviour
             localScale.x *= -1f;
             transform.localScale = localScale;
         }
+    } 
+    private void TurnIntoSmoke()
+    {
+        _isAbilityActive = true;
+        _playerBody.SetActive(false);
+        _actualSpeed = _speedInSmokeMode;
+        _particleSystem.Play();
+        _playerCombat.ChangeAbolotyBool(_isAbilityActive);
+    }
+    private void TurnOutOfSmoke()
+    {
+        _isAbilityActive = false;
+        _playerBody.SetActive(true);
+        _actualSpeed = Speed;
+        _particleSystem.Stop();
+        _playerCombat.ChangeAbolotyBool(_isAbilityActive);
     }
 }

@@ -1,14 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 using Service;
-using System;
 
-public class Enemy : MonoBehaviour
+public class EnemyShooter : MonoBehaviour
 {
-
-    public float Damage;
     [SerializeField] private Transform _attackPoint;
     [SerializeField] private float _attackRange;
     [SerializeField] private LayerMask _playerlayer;
@@ -16,59 +12,64 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float _timeBetwenAttacks;
     [SerializeField] private float _sightOfViewDistance;
     [SerializeField] private Transform _raycastStart;
-
+    [SerializeField] private float _speed;
     [SerializeField] private float _stopTrackingDistance;
-    [SerializeField] private float _stayOnPointTime;
+    [SerializeField] private GameObject _projectile;
 
-    private int _currentPatrolPoint = 0;
     private bool _playerFound = false;
-    private bool _isCorutineCalled = false;
-    private bool _isFaceRight = true;
     private float _actualTimeBetwenAttacks;
-    private float _currentHp;
     private Transform _target;
     private Rigidbody2D rb;
-    
+    private bool _isFaceRight = true;
+    private float oldX;
     [SerializeField] private Transform[] _patrolpoints;
 
     private void Start()
-    { 
+    {
         rb = gameObject.GetComponent<Rigidbody2D>();
-        
+        _actualTimeBetwenAttacks = _timeBetwenAttacks;
+        oldX = transform.position.x;
     }
-    
+
     private void Update()
     {
-       
         if (_playerFound == false)
         {
             DetectPlayer();
-            
         }
-       
+        else
+        {
+            FollowPlayer(_target);
+        }
+        if (transform.position.x < oldX) _isFaceRight = false;
+        else _isFaceRight = true;
+
+        oldX = transform.position.x;
         _actualTimeBetwenAttacks -= Time.deltaTime;
+        
     }
+    
 
     private void DetectPlayer()
     {
         RaycastHit2D hitInfo = Physics2D.Raycast(_raycastStart.position, _raycastStart.right, _sightOfViewDistance);
         if (_isFaceRight == true)
         {
-            hitInfo = Physics2D.Raycast(_raycastStart.position, _raycastStart.right, _sightOfViewDistance);
-        }
-        else
+             hitInfo = Physics2D.Raycast(_raycastStart.position, _raycastStart.right, _sightOfViewDistance);
+        } else
         {
-            hitInfo = Physics2D.Raycast(_raycastStart.position, -_raycastStart.right, _sightOfViewDistance);
+             hitInfo = Physics2D.Raycast(_raycastStart.position, -_raycastStart.right, _sightOfViewDistance);
         }
+        
 
         if (hitInfo.collider != null)
         {
             Debug.DrawLine(_raycastStart.position, hitInfo.point, Color.red);
             if (LayerChecker.CheckLayersEquality(hitInfo.collider.gameObject.layer, _playerlayer))
-            {   
+            {
                 _target = hitInfo.collider.transform;
                 _playerFound = true;
-            } 
+            }
         }
         else
         {
@@ -76,27 +77,43 @@ public class Enemy : MonoBehaviour
         }
     }
 
-   
-    
+    private void FollowPlayer(Transform target)
+    {
+        if (Vector2.Distance(transform.position, target.position) <= _attackRange )
+        {
+            transform.position = Vector2.MoveTowards(transform.position, target.position, -_speed * Time.deltaTime);
+        }   
+        else if (Vector2.Distance(transform.position, target.position) <= _stopTrackingDistance)
+        {
+            _playerFound = false;
+        }
+        else
+        {
+            if (_actualTimeBetwenAttacks <= 0)
+            {
+                Attack();
+            }
+        }
+    }
+
 
     public void Attack()
     {
-        Collider2D[] _hitEnemys = Physics2D.OverlapCircleAll(_attackPoint.position, _attackRange, _playerlayer);
-        Debug.Log("aaa");
-        for (int i = 0; i < _hitEnemys.Length; i++)
-        {
 
-            _hitEnemys[i].GetComponent<PLayerCombat>().GetDamage(Damage);
-            _hitEnemys[i].GetComponent<PLayerCombat>().KnockingBack(gameObject.transform);
-        }
+        Instantiate(_projectile, _attackPoint.position, Quaternion.identity);
         _actualTimeBetwenAttacks = _timeBetwenAttacks;
     }
 
-    
-    
-    
-    
-   
-    
-    
+    private void Flip()
+    {
+        if (_isFaceRight == true)
+        {
+            
+            Vector3 localScale = transform.localScale;
+            localScale.x *= -1f;
+            transform.localScale = localScale;
+            _isFaceRight = false;
+        }
+    }
+  
 }

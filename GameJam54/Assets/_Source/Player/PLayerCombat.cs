@@ -18,6 +18,7 @@ public class PLayerCombat : MonoBehaviour
     public Animator Animatior;
     private float _currentHp;
     private  float _actualTimeBetwenAttack;
+    private bool _isAbilityActive = false;
     private void Start()
     {
         _currentHp = _maxHp;
@@ -46,8 +47,8 @@ public class PLayerCombat : MonoBehaviour
         for (int i = 0; i < _hitEnemys.Length; i++)
         {
             
-            _hitEnemys[i].GetComponent<Enemy>().GetDamage(_playerDamage); 
-            _hitEnemys[i].GetComponent<Enemy>().KnockingBack(gameObject.transform);
+            _hitEnemys[i].GetComponent<HealthSyst>().GetDamage(_playerDamage); 
+            _hitEnemys[i].GetComponent<HealthSyst>().KnockingBack(gameObject.transform);
         }
     }
 
@@ -60,19 +61,30 @@ public class PLayerCombat : MonoBehaviour
     }
     public void KnockingBack(Transform enemy)
     {
-        Vector2 direction = (transform.position - enemy.position).normalized;
-        rb.AddForce(direction * _knockForce);
-        rb.AddForce(Vector2.up * _knockForce);
+        if (_isAbilityActive == false)
+        {
+            Vector2 direction = (transform.position - enemy.position).normalized;
+            rb.AddForce(direction * _knockForce);
+            rb.AddForce(Vector2.up * _knockForce);
+        } 
+    }
+    public void ChangeAbolotyBool( bool ability)
+    {
+        _isAbilityActive = ability;
     }
     public void GetDamage(float dmg)
     {
-        if (_currentHp <= 0)
+        if (_isAbilityActive == false)
         {
-            Die();
-        }
+            if (_currentHp <= 0)
+            {
+                Die();
+            }
 
-        _currentHp -= dmg;
-        Debug.Log($"Player hp = {_currentHp}");
+            _currentHp -= dmg;
+            Debug.Log($"Player hp = {_currentHp}");
+        } 
+        
     }
 
     private void Die()
