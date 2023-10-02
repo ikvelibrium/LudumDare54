@@ -25,6 +25,7 @@ public class NewEnemyMoovment : MonoBehaviour
 
     [SerializeField] private Vector3 startOffset;
 
+    private float _actualSpeed;
     private Path _path;
     private int _currentWaypoint = 0;
     [SerializeField] public RaycastHit2D _isGrounded;
@@ -38,6 +39,7 @@ public class NewEnemyMoovment : MonoBehaviour
 
     public void Start()
     {
+        _actualSpeed = _speed;
         _seeker = GetComponent<Seeker>();
         _rb = GetComponent<Rigidbody2D>();
         _isJumping = false;
@@ -49,7 +51,7 @@ public class NewEnemyMoovment : MonoBehaviour
 
     private void Update()
     {
-        Patrol();
+        //Patrol();
         if (TargetInDistance() && _followEnabled)
         {
             
@@ -65,6 +67,14 @@ public class NewEnemyMoovment : MonoBehaviour
         }
     }
 
+    public void TrackPlayer()
+    {
+        _actualSpeed = _speed;
+    }
+    public void StopTracking()
+    {
+        _actualSpeed = 0;
+    }
     private void PathFollow()
     {
         if (_path == null)
@@ -86,7 +96,7 @@ public class NewEnemyMoovment : MonoBehaviour
 
         // Direction Calculation
         Vector2 direction = ((Vector2)_path.vectorPath[_currentWaypoint] - _rb.position).normalized;
-        Vector2 force = direction * _speed;
+        Vector2 force = direction * _actualSpeed;
 
         
         if (_jumpEnabled && _isGrounded && !_isInAir && !_isOnCoolDown)
@@ -175,7 +185,7 @@ public class NewEnemyMoovment : MonoBehaviour
     }
     private IEnumerator Wait()
     {
-        Debug.Log("asdasd");
+        
         yield return new WaitForSeconds(_stayOnPointTime);
         if (_currentPatrolPoint + 1 < _patrolPoints.Length)
         {

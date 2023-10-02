@@ -20,7 +20,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float _stopTrackingDistance;
     [SerializeField] private float _stayOnPointTime;
 
-    private int _currentPatrolPoint = 0;
+    private NewEnemyMoovment _newEnemyMoovment;
     private bool _playerFound = false;
     private bool _isCorutineCalled = false;
     private bool _isFaceRight = true;
@@ -34,17 +34,15 @@ public class Enemy : MonoBehaviour
     private void Start()
     { 
         rb = gameObject.GetComponent<Rigidbody2D>();
-        
+        _newEnemyMoovment = gameObject.GetComponent<NewEnemyMoovment>();
     }
     
     private void Update()
     {
-       
-        if (_playerFound == false)
-        {
-            DetectPlayer();
             
-        }
+        DetectPlayer();
+            
+        
        
         _actualTimeBetwenAttacks -= Time.deltaTime;
     }
@@ -66,23 +64,39 @@ public class Enemy : MonoBehaviour
             Debug.DrawLine(_raycastStart.position, hitInfo.point, Color.red);
             if (LayerChecker.CheckLayersEquality(hitInfo.collider.gameObject.layer, _playerlayer))
             {   
+
                 _target = hitInfo.collider.transform;
-                _playerFound = true;
+                
+               
+                if (Vector2.Distance(transform.position, _target.position) <= _attackRange)
+                {
+                    
+                    if (_actualTimeBetwenAttacks <= 0)
+                    {
+                        Attack();
+                        
+                    }
+                  
+                    _newEnemyMoovment.StopTracking();
+                    _playerFound = true;
+                } else
+                {
+                    
+                    _playerFound = false;
+                    _newEnemyMoovment.TrackPlayer();
+                }
             } 
         }
         else
         {
             Debug.DrawLine(_raycastStart.position, _raycastStart.position + _raycastStart.right * _sightOfViewDistance, Color.green);
+           
         }
     }
-
-   
-    
 
     public void Attack()
     {
         Collider2D[] _hitEnemys = Physics2D.OverlapCircleAll(_attackPoint.position, _attackRange, _playerlayer);
-        Debug.Log("aaa");
         for (int i = 0; i < _hitEnemys.Length; i++)
         {
 
