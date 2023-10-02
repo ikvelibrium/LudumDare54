@@ -39,6 +39,8 @@ public class NewEnemyMoovment : MonoBehaviour
 
     public void Start()
     {
+        //gameObject.GetComponent<>()
+        _target = GameObject.FindGameObjectWithTag("Player").transform;
         _actualSpeed = _speed;
         _seeker = GetComponent<Seeker>();
         _rb = GetComponent<Rigidbody2D>();

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 using Service;
 using System;
 
@@ -28,22 +27,22 @@ public class Enemy : MonoBehaviour
     private float _currentHp;
     private Transform _target;
     private Rigidbody2D rb;
-    
+
     [SerializeField] private Transform[] _patrolpoints;
 
     private void Start()
-    { 
+    {
         rb = gameObject.GetComponent<Rigidbody2D>();
         _newEnemyMoovment = gameObject.GetComponent<NewEnemyMoovment>();
     }
-    
+
     private void Update()
     {
-            
+
         DetectPlayer();
-            
-        
-       
+
+
+
         _actualTimeBetwenAttacks -= Time.deltaTime;
     }
 
@@ -63,34 +62,35 @@ public class Enemy : MonoBehaviour
         {
             Debug.DrawLine(_raycastStart.position, hitInfo.point, Color.red);
             if (LayerChecker.CheckLayersEquality(hitInfo.collider.gameObject.layer, _playerlayer))
-            {   
+            {
 
                 _target = hitInfo.collider.transform;
-                
-               
+
+
                 if (Vector2.Distance(transform.position, _target.position) <= _attackRange)
                 {
-                    
+
                     if (_actualTimeBetwenAttacks <= 0)
                     {
                         Attack();
-                        
+
                     }
-                  
+
                     _newEnemyMoovment.StopTracking();
                     _playerFound = true;
-                } else
+                }
+                else
                 {
-                    
+
                     _playerFound = false;
                     _newEnemyMoovment.TrackPlayer();
                 }
-            } 
+            }
         }
         else
         {
             Debug.DrawLine(_raycastStart.position, _raycastStart.position + _raycastStart.right * _sightOfViewDistance, Color.green);
-           
+
         }
     }
 
@@ -105,12 +105,4 @@ public class Enemy : MonoBehaviour
         }
         _actualTimeBetwenAttacks = _timeBetwenAttacks;
     }
-
-    
-    
-    
-    
-   
-    
-    
 }
