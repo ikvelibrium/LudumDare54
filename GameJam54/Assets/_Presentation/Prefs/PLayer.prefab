@@ -248,7 +248,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5796433836692844513}
   m_LocalRotation: {x: -0.50000024, y: -0.4999998, z: 0.49999985, w: 0.50000024}
-  m_LocalPosition: {x: 0.06, y: 0.08, z: -0.54}
+  m_LocalPosition: {x: 0.06, y: -0.25854486, z: -0.54}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5047,10 +5047,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _particleSystem: {fileID: 0}
-  _inWichTimeDealingDamage: 0
-  _enemyLayer:
+  _smokeCheackerLayer:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 0
+  _checker: {fileID: 0}
 --- !u!1 &5796433837009550393
 GameObject:
   m_ObjectHideFlags: 0
@@ -5192,7 +5192,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5796433837767699660}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.058814287, y: 0.07654476, z: -0.58600855}
+  m_LocalPosition: {x: 0.058814287, y: -0.262, z: -0.58600855}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5285,6 +5285,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5796433837944962955}
   - component: {fileID: 5796433837944962958}
+  - component: {fileID: 8895295639807320939}
   - component: {fileID: 5796433837944963063}
   - component: {fileID: 5796433837944963061}
   - component: {fileID: 5796433837944962954}
@@ -5304,7 +5305,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5796433837944962959}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.13, y: 2.32, z: 0}
+  m_LocalPosition: {x: -2.13, y: 2.785, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5320,7 +5321,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5796433837944962959}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 91c1dae31dcba3042beb0559c10cd30a, type: 3}
   m_Name: 
@@ -5338,6 +5339,38 @@ MonoBehaviour:
   _particleSystem: {fileID: 5796433836692844515}
   _speedInSmokeMode: 10
   _smokeManacostPerSecond: 2
+  _hpRegen: 0
+  _slopeCheckDistance: 0
+--- !u!114 &8895295639807320939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5796433837944962959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adf32282e496670408a86f048d48c861, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSpeed: 5
+  groundCheckRadius: 0.18
+  jumpForce: 10
+  slopeCheckDistance: 0.5
+  maxSlopeAngle: 1
+  groundCheck: {fileID: 5796433837009550392}
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 64
+  noFriction: {fileID: 6200000, guid: e0ce0a7036989014192a42f39193ab51, type: 2}
+  fullFriction: {fileID: 6200000, guid: f9fd6fc59b8fdb844b798d903427cc98, type: 2}
+  _mana: 10
+  _speedInSmokeMode: 10
+  _smokeManacostPerSecond: 3
+  _hpRegen: 5
+  _abilityKey: 102
+  _particleSystem: {fileID: 5796433836692844515}
+  _playerBody: {fileID: 5796433837767699660}
 --- !u!114 &5796433837944963063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5359,6 +5392,12 @@ MonoBehaviour:
     m_Bits: 256
   _timeBetwenAttacks: 1
   _knockForce: 150
+  _manaRegen: 0
+  _playerBody: {fileID: 0}
+  _particleSystem: {fileID: 0}
+  _speedInSmokeMode: 0
+  _smokeManacostPerSecond: 0
+  _hpRegen: 0
   Animatior: {fileID: 5796433837944963060}
 --- !u!50 &5796433837944963061
 Rigidbody2D:

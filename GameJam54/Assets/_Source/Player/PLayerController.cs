@@ -17,18 +17,29 @@ public class PLayerController : MonoBehaviour
     [SerializeField] private ParticleSystem _particleSystem;
     [SerializeField] private float _speedInSmokeMode;
     [SerializeField] private float _smokeManacostPerSecond;
-    [SerializeField] private float _hpRegen;
+    [SerializeField] private float _hpRegen; 
+    [SerializeField] private float _slopeCheckDistance;
 
+    private float _slopeDownAngle;
+    private bool _isOnSloap;
     private float _actualSpeed;
+    private float _slopeDownAngleOld;
     private float _actualMana;
     private bool _isAbilityActive = false;
     private float _horizontalInput;
     private bool _facingRight = true;
+    private CapsuleCollider2D _cc;
+
+    private Vector2 _normalPerep;
+    private Vector2 _colliderSize;
 
     PLayerCombat _playerCombat;
 
     private void Start()
     {
+        rb = gameObject.GetComponent<Rigidbody2D>();
+        _cc = gameObject.GetComponent<CapsuleCollider2D>();
+        _colliderSize = _cc.size;
         _particleSystem.Stop();
         _actualSpeed = Speed;
         _actualMana = _mana;
@@ -36,6 +47,7 @@ public class PLayerController : MonoBehaviour
     }
     void Update()
     {
+       
         _horizontalInput = Input.GetAxisRaw("Horizontal");
 
         if (Input.GetButtonDown("Jump") && IsGrounded())
@@ -71,6 +83,32 @@ public class PLayerController : MonoBehaviour
         Flip();
     }
 
+    private void SlopeCheck()
+    {
+        Vector2 checkPos = transform.position - (Vector3)(new Vector2(0.0f, _colliderSize.y / 2));
+        SlopeCheckHorizontal(checkPos);
+        SlopeCheckVertical(checkPos);
+    }
+    private void SlopeCheckHorizontal(Vector2 checkPos)
+    {
+
+    }
+    private void SlopeCheckVertical(Vector2 checkPos)
+    {
+        RaycastHit2D _hit = Physics2D.Raycast(checkPos, Vector2.down,_slopeCheckDistance, groundLayer);
+        if (_hit)
+        {
+            Debug.DrawRay(_hit.point, _hit.normal, Color.green);
+            _normalPerep = Vector2.Perpendicular(_hit.normal);
+            _slopeDownAngle = Vector2.Angle(_hit.normal, Vector2.up);
+            Debug.DrawRay(_hit.point, _normalPerep, Color.red);
+            if (_slopeDownAngle != _slopeDownAngleOld)
+            {
+                _isOnSloap = true;
+            }
+            _slopeDownAngleOld = _slopeDownAngle;
+        }
+    }
     public void ManaRegen(float mana)
     {
         if (_isAbilityActive == false && _actualMana <= _mana)
@@ -85,7 +123,20 @@ public class PLayerController : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        rb.velocity = new Vector2(_horizontalInput * _actualSpeed, rb.velocity.y);
+        SlopeCheck();
+        if (groundCheck && !_isOnSloap)
+        {
+
+            rb.velocity = new Vector2(_horizontalInput * _actualSpeed, 0f);
+        } else if (groundCheck && _isOnSloap)
+        {
+            rb.velocity = new Vector2(Speed * _normalPerep.x * _horizontalInput, Speed * _normalPerep.y * - _horizontalInput);
+        } else if (!groundCheck)
+        {
+            rb.velocity = new Vector2(Speed * _horizontalInput, rb.velocity.y);
+        }
+        
+        
     }
 
     private bool IsGrounded()
@@ -120,4 +171,7 @@ public class PLayerController : MonoBehaviour
         _particleSystem.Stop();
         _playerCombat.ChangeAbolotyBool(_isAbilityActive);
     }
+
+    
+    
 }

@@ -13,8 +13,11 @@ public class PLayerCombat : MonoBehaviour
     [SerializeField] private float _timeBetwenAttacks;
     [SerializeField] private float _knockForce;
     [SerializeField] private float _manaRegen;
+    
+    
 
-    private PLayerController _pLayerController;
+
+    private PlayerMover _playerMover;
     private Rigidbody2D rb;
     public Animator Animatior;
     private float _currentHp;
@@ -24,7 +27,7 @@ public class PLayerCombat : MonoBehaviour
     {
         _currentHp = _maxHp;
         rb = gameObject.GetComponent<Rigidbody2D>();
-        _pLayerController = gameObject.GetComponent<PLayerController>();
+        _playerMover = gameObject.GetComponent<PlayerMover>();
         _actualTimeBetwenAttack = _timeBetwenAttacks;
     }
     void Update()
@@ -51,7 +54,7 @@ public class PLayerCombat : MonoBehaviour
             
             _hitEnemys[i].GetComponent<HealthSyst>().GetDamage(_playerDamage); 
             _hitEnemys[i].GetComponent<HealthSyst>().KnockingBack(gameObject.transform);
-            _pLayerController.ManaRegen(_manaRegen);
+            _playerMover.ManaRegen(_manaRegen);
         }
     }
 

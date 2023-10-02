@@ -77,16 +77,16 @@ public class HealthSyst : MonoBehaviour
         if (_actualTotalSmokeDamageTime >= 0)
         {
             
-            Debug.Log(_isGetingDamageFromSmoke);
+            
             if (_actualSmokeKd <= 0)
             {
-                Debug.Log("ddd");
+               
                 GetDamage(_smokeDamage);
                 _actualSmokeKd = _smokeDamageKD;
             }
         } else
         {
-            Debug.Log("dddd");
+           
             _isGetingDamageFromSmoke = false;
             _actualTotalSmokeDamageTime = _totalSmokeDamageTime;
         }
