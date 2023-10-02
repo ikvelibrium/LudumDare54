@@ -21,7 +21,7 @@ public class Smoke : MonoBehaviour
     }
     private void OnParticleTrigger( )
     {
-        Debug.Log("asdas");
+        
         List<ParticleSystem.Particle> enter = new List<ParticleSystem.Particle>();
         int numEnter = _particleSystem.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, enter);
         for (int i = 0; i < numEnter; i++)

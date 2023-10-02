@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMover : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private KeyCode _abilityKey;
     [SerializeField] private ParticleSystem _particleSystem;
     [SerializeField] private GameObject _playerBody;
+    [SerializeField] private Image _manaBar;
 
     PLayerCombat _playerCombat;
 
@@ -62,6 +64,7 @@ public class PlayerMover : MonoBehaviour
 
     private void Update()
     {
+        _manaBar.fillAmount = _actualMana / _mana;
         CheckInput();
         if (Input.GetKeyDown(_abilityKey) && _actualMana >= _mana && _isAbilityActive == false)
         {

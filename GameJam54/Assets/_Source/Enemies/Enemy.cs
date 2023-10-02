@@ -15,7 +15,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float _timeBetwenAttacks;
     [SerializeField] private float _sightOfViewDistance;
     [SerializeField] private Transform _raycastStart;
-
+    [SerializeField] private Animator _animator;
     [SerializeField] private float _stopTrackingDistance;
     [SerializeField] private float _stayOnPointTime;
 
@@ -38,11 +38,7 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-
         DetectPlayer();
-
-
-
         _actualTimeBetwenAttacks -= Time.deltaTime;
     }
 
@@ -96,6 +92,7 @@ public class Enemy : MonoBehaviour
 
     public void Attack()
     {
+        _animator.SetTrigger("Attack");
         Collider2D[] _hitEnemys = Physics2D.OverlapCircleAll(_attackPoint.position, _attackRange, _playerlayer);
         for (int i = 0; i < _hitEnemys.Length; i++)
         {

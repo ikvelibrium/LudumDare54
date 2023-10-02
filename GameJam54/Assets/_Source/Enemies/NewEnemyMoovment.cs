@@ -9,7 +9,7 @@ public class NewEnemyMoovment : MonoBehaviour
     [SerializeField] private Transform _target;
     [SerializeField] private float _activateDistance = 50f;
     [SerializeField] private float _pathUpdateSeconds = 0.5f;
-
+    [SerializeField] private Animator _animator;
 
     [SerializeField] private float _speed = 2f, _jumpForce = 5f;
     [SerializeField] private  float _nextWaypointDistance = 3f;
@@ -40,6 +40,7 @@ public class NewEnemyMoovment : MonoBehaviour
     public void Start()
     {
         //gameObject.GetComponent<>()
+       
         _target = GameObject.FindGameObjectWithTag("Player").transform;
         _actualSpeed = _speed;
         _seeker = GetComponent<Seeker>();
@@ -53,6 +54,7 @@ public class NewEnemyMoovment : MonoBehaviour
 
     private void Update()
     {
+        _animator.SetFloat("Speed", _actualSpeed);
         //Patrol();
         if (TargetInDistance() && _followEnabled)
         {
@@ -65,6 +67,7 @@ public class NewEnemyMoovment : MonoBehaviour
     {
         if (_followEnabled && TargetInDistance() && _seeker.IsDone())
         {
+            Debug.Log("sdads");
             _seeker.StartPath(_rb.position, _target.position, OnPathComplete);
         }
     }
@@ -121,7 +124,7 @@ public class NewEnemyMoovment : MonoBehaviour
         {
             _isInAir = true;
         }
-
+         
         // Movement
         _rb.velocity = new Vector2(force.x, _rb.velocity.y);
 
