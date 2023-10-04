@@ -22,6 +22,7 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private ParticleSystem _particleSystem;
     [SerializeField] private GameObject _playerBody;
     [SerializeField] private Image _manaBar;
+    [SerializeField] private Animator _animator;
 
     PLayerCombat _playerCombat;
 
@@ -64,6 +65,7 @@ public class PlayerMover : MonoBehaviour
 
     private void Update()
     {
+        _animator.SetFloat("Speed", _actualSpeed);
         _manaBar.fillAmount = _actualMana / _mana;
         CheckInput();
         if (Input.GetKeyDown(_abilityKey) && _actualMana >= _mana && _isAbilityActive == false)

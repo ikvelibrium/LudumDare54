@@ -274,6 +274,7 @@ MonoBehaviour:
   _particleSystem: {fileID: 5153533487033999496}
   _playerBody: {fileID: 5153533485529586163}
   _manaBar: {fileID: 0}
+  _animator: {fileID: 0}
 --- !u!114 &5153533486955227522
 MonoBehaviour:
   m_ObjectHideFlags: 0
