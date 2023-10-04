@@ -12,6 +12,7 @@ public class HealthSyst : MonoBehaviour
     [SerializeField] private float _smokeDamageKD;
     [SerializeField] private float _totalSmokeDamageTime;
 
+    private ContDown _contDown;
     private BigEnemy _bigEnemy;
     private float _actualSmokeKd;
     private float _actualTotalSmokeDamageTime;
@@ -21,6 +22,7 @@ public class HealthSyst : MonoBehaviour
     private Rigidbody2D rb;
     private void Start()
     {
+        _contDown = GameObject.FindGameObjectWithTag("Counter").GetComponent<ContDown>();
         gameObject.TryGetComponent<BigEnemy>(out _bigEnemy);
         _currentHp = _maxHp;
         rb = gameObject.GetComponent<Rigidbody2D>();
@@ -53,14 +55,12 @@ public class HealthSyst : MonoBehaviour
     }
     private void Die()
     {
+
         if (_bigEnemy != null)
         {
             _bigEnemy.SpawnGrave();
         }
-        else
-        {
-            Debug.Log("Big enemy = null, otsosi");
-        }
+        _contDown.ChangeEnmeysAmount();
         Destroy(gameObject);
     }
 

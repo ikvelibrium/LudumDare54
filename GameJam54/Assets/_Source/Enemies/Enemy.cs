@@ -19,6 +19,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float _stopTrackingDistance;
     [SerializeField] private float _stayOnPointTime;
 
+    
     private NewEnemyMoovment _newEnemyMoovment;
     private bool _playerFound = false;
     private bool _isCorutineCalled = false;
@@ -32,6 +33,7 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
+       
         rb = gameObject.GetComponent<Rigidbody2D>();
         _newEnemyMoovment = gameObject.GetComponent<NewEnemyMoovment>();
     }

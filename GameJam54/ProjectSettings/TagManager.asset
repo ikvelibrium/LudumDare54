@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - Counter
   layers:
   - Default
   - TransparentFX
@@ -44,4 +45,7 @@ TagManager:
     locked: 0
   - name: Background
     uniqueID: 2478611871
+    locked: 0
+  - name: BackBack
+    uniqueID: 4139314299
     locked: 0
