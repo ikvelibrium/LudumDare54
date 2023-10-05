@@ -16,7 +16,7 @@ public class ContDown : MonoBehaviour
     private void Update()
     {
         _enemys.text = $"Enemies left: {_enemysCount}/{_enemysArray.Length} " ;
-        if (_enemysArray.Length <= 0)
+        if (_enemysCount <= 0)
         {
             WinScrean.SetActive(true);
         }

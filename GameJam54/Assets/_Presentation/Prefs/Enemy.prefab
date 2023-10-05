@@ -289,6 +289,7 @@ MonoBehaviour:
   _smokeDamage: 3
   _smokeDamageKD: 3
   _totalSmokeDamageTime: 10
+  _animator: {fileID: 6145032788608873250}
 --- !u!1 &7475241468851294505
 GameObject:
   m_ObjectHideFlags: 0

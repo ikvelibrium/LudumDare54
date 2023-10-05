@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Service;
 
 public class PlayerMover : MonoBehaviour
 {
@@ -23,9 +24,10 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private GameObject _playerBody;
     [SerializeField] private Image _manaBar;
     [SerializeField] private Animator _animator;
-
+    
+    
     PLayerCombat _playerCombat;
-
+    
    
     private float xInput;
     private float slopeDownAngle;
@@ -36,6 +38,7 @@ public class PlayerMover : MonoBehaviour
 
     private int facingDirection = 1;
 
+   
     private bool _isAbilityActive = false;
     private bool isGrounded;
     private bool isOnSlope;
@@ -66,7 +69,10 @@ public class PlayerMover : MonoBehaviour
 
     private void Update()
     {
+       
         _animator.SetFloat("Speed",Mathf.Abs(xInput));
+        _animator.SetFloat("VerticalSpeed", rb.velocity.y);
+        _animator.SetBool("Grounded", isGrounded);
         _manaBar.fillAmount = _actualMana / _mana;
         CheckInput();
         if (Input.GetKeyDown(_abilityKey) && _actualMana >= _mana && _isAbilityActive == false)
@@ -230,19 +236,19 @@ public class PlayerMover : MonoBehaviour
       
         if (isGrounded && !isOnSlope && !isJumping) //if not on slope
         {
-            Debug.Log("This one");
+            //Debug.Log("This one");
             newVelocity.Set(_actualSpeed * xInput, 0.0f);
             rb.velocity = newVelocity;
         }
         else if (isGrounded && isOnSlope && canWalkOnSlope && !isJumping) //If on slope
         {
-            Debug.Log("Second one");
+            //Debug.Log("Second one");
             newVelocity.Set(_actualSpeed * slopeNormalPerp.x * -xInput, _actualSpeed * slopeNormalPerp.y * -xInput);
             rb.velocity = newVelocity;
         }
         else if (!isGrounded) //If in air
         {
-            Debug.Log("Third one");
+            //Debug.Log("Third one");
             newVelocity.Set(_actualSpeed * xInput, rb.velocity.y);
             rb.velocity = newVelocity;
         }
@@ -288,4 +294,5 @@ public class PlayerMover : MonoBehaviour
         _particleSystem.Stop();
         _playerCombat.ChangeAbolotyBool(_isAbilityActive);
     }
+   
 }

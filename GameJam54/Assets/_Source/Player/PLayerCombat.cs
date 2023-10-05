@@ -96,7 +96,7 @@ public class PLayerCombat : MonoBehaviour
             {
                 Die();
             }
-
+            _animator.SetTrigger("GetDamage");
             _currentHp -= dmg;
             Debug.Log($"Player hp = {_currentHp}");
         } 

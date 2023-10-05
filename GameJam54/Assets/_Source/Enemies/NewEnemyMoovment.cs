@@ -67,7 +67,7 @@ public class NewEnemyMoovment : MonoBehaviour
     {
         if (_followEnabled && TargetInDistance() && _seeker.IsDone())
         {
-            Debug.Log("sdads");
+            
             _seeker.StartPath(_rb.position, _target.position, OnPathComplete);
         }
     }

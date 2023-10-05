@@ -12,6 +12,7 @@ public class HealthSyst : MonoBehaviour
     [SerializeField] private float _smokeDamage;
     [SerializeField] private float _smokeDamageKD;
     [SerializeField] private float _totalSmokeDamageTime;
+    [SerializeField] private Animator _animator;
 
     private ContDown _contDown;
     private BigEnemy _bigEnemy;
@@ -43,7 +44,8 @@ public class HealthSyst : MonoBehaviour
         {
             Die();
         }
-
+        Debug.Log("saasd");
+        _animator.SetTrigger("GetDamage");
         _currentHp -= dmg;
         Debug.Log($"Enemy hp = {_currentHp}");
     }
@@ -82,6 +84,7 @@ public class HealthSyst : MonoBehaviour
 
     private void GetDamageWithSmoke()
     {
+        
         _isGetingDamageFromSmoke = true;
          _actualTotalSmokeDamageTime -= Time.deltaTime;
         _actualSmokeKd -= Time.deltaTime;
