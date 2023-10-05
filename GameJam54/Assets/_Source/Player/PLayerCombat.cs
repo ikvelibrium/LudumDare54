@@ -16,8 +16,9 @@ public class PLayerCombat : MonoBehaviour
     [SerializeField] private float _manaRegen;
     [SerializeField] private Animator _animator;
     [SerializeField] private Image _hpBar;
+    [SerializeField] private float _hpPlus;
 
-
+    private bool _isHealing = false;
     private PlayerMover _playerMover;
     private Rigidbody2D rb;
     private float _currentHp;
@@ -41,6 +42,13 @@ public class PLayerCombat : MonoBehaviour
                 Attack();
                 _actualTimeBetwenAttack = _timeBetwenAttacks;
             }
+        }
+        if (_isAbilityActive == true && _currentHp <= _maxHp )
+        {
+            _currentHp += Time.deltaTime * _hpPlus;
+        } else if(_currentHp > _maxHp)
+        {
+            _currentHp = _maxHp;
         }
        
     }
@@ -79,10 +87,7 @@ public class PLayerCombat : MonoBehaviour
     {
         _isAbilityActive = ability;
     }
-    public void Heal(float healAmount)
-    {
-        _currentHp += healAmount;
-    }
+    
     public void GetDamage(float dmg)
     {
         if (_isAbilityActive == false)

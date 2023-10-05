@@ -26,6 +26,7 @@ public class PlayerMover : MonoBehaviour
 
     PLayerCombat _playerCombat;
 
+   
     private float xInput;
     private float slopeDownAngle;
     private float slopeSideAngle;
@@ -65,7 +66,7 @@ public class PlayerMover : MonoBehaviour
 
     private void Update()
     {
-        _animator.SetFloat("Speed", _actualSpeed);
+        _animator.SetFloat("Speed",Mathf.Abs(xInput));
         _manaBar.fillAmount = _actualMana / _mana;
         CheckInput();
         if (Input.GetKeyDown(_abilityKey) && _actualMana >= _mana && _isAbilityActive == false)
@@ -226,6 +227,7 @@ public class PlayerMover : MonoBehaviour
 
     private void ApplyMovement()
     {
+      
         if (isGrounded && !isOnSlope && !isJumping) //if not on slope
         {
             Debug.Log("This one");
@@ -271,7 +273,7 @@ public class PlayerMover : MonoBehaviour
     }
     private void TurnIntoSmoke()
     {
-        _playerCombat.Heal(_hpRegen);
+        
         _isAbilityActive = true;
         _playerBody.SetActive(false);
         _actualSpeed = _speedInSmokeMode;

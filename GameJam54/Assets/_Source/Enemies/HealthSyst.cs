@@ -7,6 +7,7 @@ public class HealthSyst : MonoBehaviour
 {
     [SerializeField] float _maxHp;
     [SerializeField] private float _knockForce;
+    [SerializeField] private float _knockUpForce;
     [SerializeField] private LayerMask _smokeLayer;
     [SerializeField] private float _smokeDamage;
     [SerializeField] private float _smokeDamageKD;
@@ -51,7 +52,7 @@ public class HealthSyst : MonoBehaviour
     {
         Vector2 direction = (transform.position - player.position).normalized;
         rb.AddForce(direction * _knockForce);
-        rb.AddForce(Vector2.up * _knockForce);
+        rb.AddForce(Vector2.up * _knockUpForce);
     }
     private void Die()
     {
